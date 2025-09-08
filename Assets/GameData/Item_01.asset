@@ -17,5 +17,12 @@ MonoBehaviour:
   actionType: 3
   actionIcon: {fileID: 21300000, guid: 16d461afee93c7242be77765925052c6, type: 3}
   actionDes: "\u666E\u901A\u836F\u6C34"
-  actionValue_01: 10
-  actionValue_02: -1
+  attackDamage: -1
+  attackHitSection_Lv1: -1
+  attackHitSection_Lv2: -1
+  attackHitSection_Lv3: -1
+  attackHitSection_Lv4: -1
+  attackHitSection_Lv5: -1
+  defendValue: -1
+  dodgeRate: -1
+  itemValue: 15

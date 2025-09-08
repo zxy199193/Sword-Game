@@ -16,6 +16,16 @@ MonoBehaviour:
   actionName: "\u653B\u51FB1"
   actionType: 0
   actionIcon: {fileID: 21300000, guid: 12b8da47daa802947b1ed148aed077ff, type: 3}
-  actionDes: "\u666E\u901A\u653B\u51FB"
-  actionValue_01: 20
-  actionValue_02: -1
+  actionDes: "\u666E\u901A\u653B\u51FB\uFF0C\u9020\u621020\u70B9\u4F24\u5BB3"
+  attackDamage: 20
+  attackSliderSpeed: 1
+  attackSliderDecay: 2
+  attackHitSection_Lv1: 60
+  attackHitSection_Lv2: 20
+  attackHitSection_Lv3: 10
+  attackHitSection_Lv4: 0
+  attackHitSection_Lv5: 0
+  attackAni: 1
+  defendValue: -1
+  dodgeRate: -1
+  itemValue: -1

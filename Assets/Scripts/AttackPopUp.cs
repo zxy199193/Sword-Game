@@ -14,19 +14,41 @@ public class AttackPopUp : MonoBehaviour
     public Text actionDamage;
     public ActionSelection actionSelection;
     public ActionData currentActionData;
-    public event System.Action<float> OnAttackDamage;
+    public event System.Action<float,int> OnAttackDamage;
+    public int attackAni;
 
     private bool isAiming = true;
     private bool isSlowDown = false;
     public float sliderValue;
     public float sliderSpeed;
-    public float initialsliderValue = 0.5f;
-    public float initialSliderSpeed = 0.005f;
+    private float initialsliderValue = 0.5f;
+    private float initialSliderSpeed = 0.005f;
     public float lastSliderValue = 0f;
-    public float decayRate = 0.01f;
+    private float decayRate = 0.01f;
     public int directionFactor = 1;
     public Slider slider;
     public Text sliderValueText;
+    public int hitLevel = 0;
+
+    public int hitSectio_Lv0 = 100;
+    public int hitSectio_Lv1 = 60;
+    public int hitSectio_Lv2 = 20;
+    public int hitSectio_Lv3 = 5;
+    public int hitSectio_Lv4 = 0;
+    public int hitSectio_Lv5 = 0;
+
+    public float hitFactor_Lv0 = 0;
+    public float hitFactor_Lv1 = 1f;
+    public float hitFactor_Lv2 = 1.35f;
+    public float hitFactor_Lv3 = 2f;
+    public float hitFactor_Lv4 = 3f;
+    public float hitFactor_Lv5 = 5f;
+
+    public GameObject hitSection_Lv1;
+    public GameObject hitSection_Lv2;
+    public GameObject hitSection_Lv3;
+    public GameObject hitSection_Lv4;
+    public GameObject hitSection_Lv5;
 
     private void Update()
     {
@@ -37,6 +59,7 @@ public class AttackPopUp : MonoBehaviour
         {
             if(sliderSpeed <= 0)
             {
+                GetHitFactor(sliderValue);
                 StartCoroutine(DealActualDamage());
                 isSlowDown = false;
             }
@@ -53,9 +76,17 @@ public class AttackPopUp : MonoBehaviour
             }
         }
         actionName.text = currentActionData.actionName;
-        attackValue = currentActionData.actionValue_01;
+        attackValue = currentActionData.attackDamage;
         actionDamage.text = "Basic Damage: " + attackValue.ToString();
-        Initialize();
+        initialSliderSpeed = currentActionData.attackSliderSpeed;
+        decayRate = currentActionData.attackSliderDecay;
+        hitSectio_Lv1 = currentActionData.attackHitSection_Lv1;
+        hitSectio_Lv2 = currentActionData.attackHitSection_Lv2;
+        hitSectio_Lv3 = currentActionData.attackHitSection_Lv3;
+        hitSectio_Lv4 = currentActionData.attackHitSection_Lv4;
+        hitSectio_Lv5 = currentActionData.attackHitSection_Lv5;
+        attackAni = currentActionData.attackAni;
+    Initialize();
     }
     
     public void Initialize()
@@ -64,6 +95,16 @@ public class AttackPopUp : MonoBehaviour
         sliderValue = initialsliderValue;
         slider.value = sliderValue;
         isAiming = true;
+        RectTransform rectTransform_Lv1 = hitSection_Lv1.GetComponent<RectTransform>();
+        rectTransform_Lv1.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, hitSectio_Lv1 * 5);
+        RectTransform rectTransform_Lv2 = hitSection_Lv2.GetComponent<RectTransform>();
+        rectTransform_Lv2.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, hitSectio_Lv2 * 5);
+        RectTransform rectTransform_Lv3 = hitSection_Lv3.GetComponent<RectTransform>();
+        rectTransform_Lv3.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, hitSectio_Lv3 * 5);
+        RectTransform rectTransform_Lv4 = hitSection_Lv4.GetComponent<RectTransform>();
+        rectTransform_Lv4.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, hitSectio_Lv4 * 5);
+        RectTransform rectTransform_Lv5 = hitSection_Lv5.GetComponent<RectTransform>();
+        rectTransform_Lv5.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, hitSectio_Lv5 * 5);
     }
     
     public void UpdateUI()
@@ -71,13 +112,13 @@ public class AttackPopUp : MonoBehaviour
         if (Mathf.Abs(sliderValue - lastSliderValue) > Mathf.Epsilon)
         {
             slider.value = sliderValue;
-            sliderValueText.text = "Aiming: " + sliderValue.ToString("F1") + "%";
+            sliderValueText.text = "Aiming: " + (sliderValue*100-50).ToString("F1");
             lastSliderValue = sliderValue;
         }
     }
     public void SliderMovement()
     {
-        sliderValue = Mathf.Clamp01(sliderValue + directionFactor * sliderSpeed);
+        sliderValue = Mathf.Clamp01(sliderValue + directionFactor * sliderSpeed*Time.deltaTime);
         if (sliderValue >= 1.0f)
         {
             directionFactor = -1;
@@ -102,15 +143,51 @@ public class AttackPopUp : MonoBehaviour
     }
     IEnumerator DealActualDamage()
     {
-        actualDamage = attackValue * attackFactor * sliderValue;
+        actualDamage = attackValue * attackFactor;
         Debug.Log(attackValue);
         Debug.Log(attackFactor);
         Debug.Log(sliderValue);
         Debug.Log(actualDamage);
-        yield return new WaitForSeconds(2f);
-        OnAttackDamage?.Invoke(actualDamage);
+        yield return new WaitForSeconds(1.5f);
+        OnAttackDamage?.Invoke(actualDamage,attackAni);
         gameObject.SetActive(false);
         yield return null;
     }
+
+    public void GetHitFactor(float a)
+    {
+        float num = a*100-50;
+        if (num >= -hitSectio_Lv0/2 && num <= hitSectio_Lv0/2) hitLevel = 0;
+        if (num >= -hitSectio_Lv1/2 && num <= hitSectio_Lv1/2) hitLevel = Mathf.Max(hitLevel, 1);
+        if (num >= -hitSectio_Lv2/2 && num <= hitSectio_Lv2/2) hitLevel = Mathf.Max(hitLevel, 2);
+        if (num >= -hitSectio_Lv3/2 && num <= hitSectio_Lv3/2) hitLevel = Mathf.Max(hitLevel, 3);
+        if (num >= -hitSectio_Lv4/2 && num <= hitSectio_Lv4/2) hitLevel = Mathf.Max(hitLevel, 4);
+        if (num >= -hitSectio_Lv5/2 && num <= hitSectio_Lv5/2) hitLevel = Mathf.Max(hitLevel, 5);
+        switch (hitLevel)
+        {
+            case 0:
+                attackFactor = hitFactor_Lv0;
+                break;
+            case 1:
+                attackFactor = hitFactor_Lv1;
+                break;
+            case 2:
+                attackFactor = hitFactor_Lv2;
+                break;
+            case 3:
+                attackFactor = hitFactor_Lv3;
+                break;
+            case 4:
+                attackFactor = hitFactor_Lv4;
+                break;
+            case 5:
+                attackFactor = hitFactor_Lv5;
+                break;
+
+        }
+        Debug.Log("Hit Level =" + hitLevel + "/" + "Attack Factor = " + attackFactor);
+    }
+
+
 
 }

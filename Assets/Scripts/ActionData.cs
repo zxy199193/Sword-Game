@@ -29,6 +29,18 @@ public class ActionData : ScriptableObject
     public ActionType actionType;
     public Sprite actionIcon;
     [TextArea] public string actionDes;
-    public int actionValue_01;
-    public int actionValue_02;
+    public int attackDamage;
+    public float attackSliderSpeed;
+    public float attackSliderDecay;
+    public int attackHitSection_Lv1;
+    public int attackHitSection_Lv2;
+    public int attackHitSection_Lv3;
+    public int attackHitSection_Lv4;
+    public int attackHitSection_Lv5;
+    public int attackAni;
+    
+    public int defendValue;
+    public int dodgeRate;
+    public int itemValue;
+
 }
