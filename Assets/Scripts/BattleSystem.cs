@@ -12,6 +12,7 @@ public class BattleSystem : MonoBehaviour
     public GameObject battleInfo;
     public Text showAttackDamage;
     public Animator playerAnimator;
+    public AnimationEvent animationEvent;
     public void Start()
     {
         actionButton.OnUseAction += ReceiveActionEnum;
@@ -29,14 +30,22 @@ public class BattleSystem : MonoBehaviour
 
     public void ExecuteAttack(float actualDamage, int ani)
     {
-        StartCoroutine(AttackAnimation(actualDamage,ani));
-    }
-    IEnumerator AttackAnimation(float dmg, int ani)
-    {
+        animationEvent.OnAnimationEnd += ReceiveAnimationEvent;
         playerAnimator.SetInteger("AttackAction", ani);
-        yield return new WaitForSeconds(1f);
+        actualAttackDamage = actualDamage;
+    }
+
+    public void ReceiveAnimationEvent()
+    {
         playerAnimator.SetInteger("AttackAction", 0);
-        if (dmg == 0)
+        StartCoroutine(AttackAnimation());
+        animationEvent.OnAnimationEnd -= ReceiveAnimationEvent;
+    }
+
+    IEnumerator AttackAnimation()
+    {
+        yield return new WaitForSeconds(0.5f);
+        if (actualAttackDamage == 0)
         {
             battleInfo.SetActive(true);
             showAttackDamage.text = "Miss";
@@ -44,12 +53,11 @@ public class BattleSystem : MonoBehaviour
         else
         {
             battleInfo.SetActive(true);
-            showAttackDamage.text = "Deal Damage: " + dmg.ToString("F0"); 
+            showAttackDamage.text = "Deal Damage: " + actualAttackDamage.ToString("F0"); 
         }
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
         battleInfo.SetActive(false);
         yield return null;
-        Debug.Log(ani);
     }
 
 }

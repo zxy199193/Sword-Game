@@ -86,7 +86,7 @@ public class AttackPopUp : MonoBehaviour
         hitSectio_Lv4 = currentActionData.attackHitSection_Lv4;
         hitSectio_Lv5 = currentActionData.attackHitSection_Lv5;
         attackAni = currentActionData.attackAni;
-    Initialize();
+        Initialize();
     }
     
     public void Initialize()
@@ -95,6 +95,7 @@ public class AttackPopUp : MonoBehaviour
         sliderValue = initialsliderValue;
         slider.value = sliderValue;
         isAiming = true;
+        hitLevel = 0;
         RectTransform rectTransform_Lv1 = hitSection_Lv1.GetComponent<RectTransform>();
         rectTransform_Lv1.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, hitSectio_Lv1 * 5);
         RectTransform rectTransform_Lv2 = hitSection_Lv2.GetComponent<RectTransform>();
