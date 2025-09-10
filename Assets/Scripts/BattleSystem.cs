@@ -1,22 +1,44 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
+public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
 public class BattleSystem : MonoBehaviour
 {
+    public BattleState battleState;
+
+    public RoleManager roleManager;
+    public GameObject playerObject;
+    public GameObject enemyObject;
+    public Role playerRole;
+    public Role enemyRole;
+
     public GameObject attackPopUpPanel;
     public AttackPopUp attackPopUp;
     public ActionButton actionButton;
     public float actualAttackDamage;
-    public GameObject battleInfo;
-    public Text showAttackDamage;
+    public UIManager uiManager;
+    
     public Animator playerAnimator;
     public AnimationEvent animationEvent;
-    public void Start()
+
+
+    void Start()
     {
+        battleState = BattleState.START;
         actionButton.OnUseAction += ReceiveActionEnum;
+        roleManager.OnBattleWon += BattleWon;
         Debug.Log("Have subscribed OnUseAction:");
+        playerObject = roleManager.CreatePlayer();
+        playerRole = playerObject.GetComponent<Role>();
+        enemyObject = roleManager.CreateEnemy();
+        enemyRole = playerObject.GetComponent<Role>();
+        StartPlayerTurn();
+    }
+    public void StartPlayerTurn()
+    {
+        battleState = BattleState.PLAYERTURN;
+        StartCoroutine(uiManager.PlayerTurnUI());
     }
 
     public void ReceiveActionEnum(ActionEnum actionEnum)
@@ -30,34 +52,42 @@ public class BattleSystem : MonoBehaviour
 
     public void ExecuteAttack(float actualDamage, int ani)
     {
+        animationEvent = playerObject.GetComponentInChildren<AnimationEvent>();
+        playerAnimator = playerObject.GetComponentInChildren<Animator>();
         animationEvent.OnAnimationEnd += ReceiveAnimationEvent;
         playerAnimator.SetInteger("AttackAction", ani);
         actualAttackDamage = actualDamage;
+        roleManager.EnemyTakeDamage(actualAttackDamage);
     }
 
     public void ReceiveAnimationEvent()
     {
         playerAnimator.SetInteger("AttackAction", 0);
-        StartCoroutine(AttackAnimation());
+        uiManager.actualAttackDamage = actualAttackDamage;
+        StartCoroutine(uiManager.BattleInfo());
         animationEvent.OnAnimationEnd -= ReceiveAnimationEvent;
+        uiManager.OnUIEnd += StartEnemyTurn;
     }
 
-    IEnumerator AttackAnimation()
+    public void StartEnemyTurn()
     {
-        yield return new WaitForSeconds(0.5f);
-        if (actualAttackDamage == 0)
+        if(battleState != BattleState.WON)
         {
-            battleInfo.SetActive(true);
-            showAttackDamage.text = "Miss";
+            battleState = BattleState.ENEMYTURN;
+            StartCoroutine(uiManager.EnemyTurnUI());
         }
-        else
-        {
-            battleInfo.SetActive(true);
-            showAttackDamage.text = "Deal Damage: " + actualAttackDamage.ToString("F0"); 
-        }
-        yield return new WaitForSeconds(1.5f);
-        battleInfo.SetActive(false);
-        yield return null;
+    }
+
+    public IEnumerator EnemyAction()
+    {
+        yield return new WaitForSeconds(2f);
+
+    }
+
+    public void BattleWon()
+    {
+        battleState = BattleState.WON;
+        uiManager.Won();
     }
 
 }
