@@ -19,7 +19,7 @@ public class BattleSystem : MonoBehaviour
     public float actualAttackDamage;
     public UIManager uiManager;
     
-    public Animator playerAnimator;
+    public Animator roleAnimator;
     public AnimationEvent animationEvent;
 
 
@@ -28,7 +28,6 @@ public class BattleSystem : MonoBehaviour
         battleState = BattleState.START;
         actionButton.OnUseAction += ReceiveActionEnum;
         roleManager.OnBattleWon += BattleWon;
-        Debug.Log("Have subscribed OnUseAction:");
         playerObject = roleManager.CreatePlayer();
         playerRole = playerObject.GetComponent<Role>();
         enemyObject = roleManager.CreateEnemy();
@@ -38,12 +37,13 @@ public class BattleSystem : MonoBehaviour
     public void StartPlayerTurn()
     {
         battleState = BattleState.PLAYERTURN;
+        uiManager.OnUIEnd -= StartPlayerTurn;
+        attackPopUp.OnAttackDamage -= ExecuteAttack;
         StartCoroutine(uiManager.PlayerTurnUI());
     }
 
     public void ReceiveActionEnum(ActionEnum actionEnum)
     {
-        Debug.Log("Receive Action: " + actionEnum);
         attackPopUpPanel.SetActive(true);
         attackPopUp.currentActionEnum = actionEnum;
         attackPopUp.UseAction();
@@ -52,26 +52,54 @@ public class BattleSystem : MonoBehaviour
 
     public void ExecuteAttack(float actualDamage, int ani)
     {
-        animationEvent = playerObject.GetComponentInChildren<AnimationEvent>();
-        playerAnimator = playerObject.GetComponentInChildren<Animator>();
-        animationEvent.OnAnimationEnd += ReceiveAnimationEvent;
-        playerAnimator.SetInteger("AttackAction", ani);
-        actualAttackDamage = actualDamage;
-        roleManager.EnemyTakeDamage(actualAttackDamage);
+        switch (battleState)
+        {
+            case BattleState.PLAYERTURN:
+                animationEvent = playerObject.GetComponentInChildren<AnimationEvent>();
+                roleAnimator = playerObject.GetComponentInChildren<Animator>();
+                animationEvent.OnAnimationEnd += ReceiveAnimationEvent;
+                roleAnimator.SetInteger("AttackAction", ani);
+                actualAttackDamage = actualDamage;
+                roleManager.EnemyTakeDamage(actualAttackDamage);
+                break;
+            case BattleState.ENEMYTURN:
+                animationEvent = enemyObject.GetComponentInChildren<AnimationEvent>();
+                roleAnimator = enemyObject.GetComponentInChildren<Animator>();
+                animationEvent.OnAnimationEnd += ReceiveAnimationEvent;
+                roleAnimator.SetInteger("AttackAction", ani);
+                actualAttackDamage = actualDamage;
+                roleManager.PlayerTakeDamage(actualAttackDamage);
+                break;
+
+        }
     }
 
     public void ReceiveAnimationEvent()
     {
-        playerAnimator.SetInteger("AttackAction", 0);
-        uiManager.actualAttackDamage = actualAttackDamage;
-        StartCoroutine(uiManager.BattleInfo());
-        animationEvent.OnAnimationEnd -= ReceiveAnimationEvent;
-        uiManager.OnUIEnd += StartEnemyTurn;
+        switch (battleState)
+        {
+            case BattleState.PLAYERTURN:
+                roleAnimator.SetInteger("AttackAction", 0);
+                uiManager.actualAttackDamage = actualAttackDamage;
+                StartCoroutine(uiManager.BattleInfo());
+                animationEvent.OnAnimationEnd -= ReceiveAnimationEvent;
+                uiManager.OnUIEnd += StartEnemyTurn;
+                break;
+            case BattleState.ENEMYTURN:
+                roleAnimator.SetInteger("AttackAction", 0);
+                uiManager.actualAttackDamage = actualAttackDamage;
+                StartCoroutine(uiManager.BattleInfo());
+                animationEvent.OnAnimationEnd -= ReceiveAnimationEvent;
+                uiManager.OnUIEnd += StartPlayerTurn;
+                break;
+        }
     }
 
     public void StartEnemyTurn()
     {
-        if(battleState != BattleState.WON)
+        uiManager.OnUIEnd -= StartEnemyTurn;
+        attackPopUp.OnAttackDamage -= ExecuteAttack;
+        if (battleState != BattleState.WON)
         {
             battleState = BattleState.ENEMYTURN;
             StartCoroutine(uiManager.EnemyTurnUI());
@@ -80,6 +108,7 @@ public class BattleSystem : MonoBehaviour
         attackPopUp.currentActionEnum = ActionEnum.Attack_02;
         attackPopUp.UseAction();
         attackPopUp.OnAttackDamage += ExecuteAttack;
+        StartCoroutine(attackPopUp.OnAIButton());
     }
 
     public IEnumerator EnemyAction()
@@ -92,6 +121,11 @@ public class BattleSystem : MonoBehaviour
     {
         battleState = BattleState.WON;
         uiManager.Won();
+    }
+    public void BattleLost()
+    {
+        battleState = BattleState.LOST;
+        uiManager.Lost();
     }
 
 }

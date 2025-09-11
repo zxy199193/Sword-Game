@@ -17,7 +17,7 @@ MonoBehaviour:
   actionType: 0
   actionIcon: {fileID: 21300000, guid: 8b82a4f9ec8920b42a08e2f2e2623ef9, type: 3}
   actionDes: "\u5F3A\u529B\u653B\u51FB\uFF0C\u9020\u621035\u70B9\u4F24\u5BB3"
-  attackDamage: 40
+  attackDamage: 35
   attackSliderSpeed: 1.5
   attackSliderDecay: 1.5
   attackHitSection_Lv1: 0

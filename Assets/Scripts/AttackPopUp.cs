@@ -19,6 +19,7 @@ public class AttackPopUp : MonoBehaviour
     public event System.Action<float,int> OnAttackDamage;
     public int attackAni;
     public bool isAIAttacking = false;
+    public GameObject attackButton;
 
     private bool isAiming = true;
     private bool isSlowDown = false;
@@ -73,10 +74,8 @@ public class AttackPopUp : MonoBehaviour
         }
         if (isAIAttacking)
         {
-            Debug.Log("AI about to Slash."+"  Slider: "+sliderValue+" /Direction: "+directionFactor);
             if (sliderValue >= aiBreakPos - 0.005 && sliderValue <= aiBreakPos+0.005 && directionFactor == aiBreakDirection)
             {
-                Debug.Log("AI Slashed!");
                 OnSlashButton();
                 isAIAttacking = false;
             }
@@ -162,13 +161,14 @@ public class AttackPopUp : MonoBehaviour
     IEnumerator DealActualDamage()
     {
         actualDamage = attackValue * attackFactor;
-        Debug.Log(attackValue);
-        Debug.Log(attackFactor);
-        Debug.Log(sliderValue);
-        Debug.Log(actualDamage);
+        Debug.Log("Attack Dmg: "+attackValue);
+        Debug.Log("Attack Factor: "+attackFactor);
+        Debug.Log("Slider Value: " + sliderValue);
+        Debug.Log("Actual Dmg: " + actualDamage);
         yield return new WaitForSeconds(1.5f);
         OnAttackDamage?.Invoke(actualDamage,attackAni);
         gameObject.SetActive(false);
+        attackButton.SetActive(true);
         yield return null;
     }
 
@@ -206,12 +206,14 @@ public class AttackPopUp : MonoBehaviour
         Debug.Log("Hit Level =" + hitLevel + "/" + "Attack Factor = " + attackFactor);
     }
 
-    public void OnAIButton()
+    public IEnumerator OnAIButton()
     {
+        attackButton.SetActive(false);
+        yield return new WaitForSeconds(1.5f);
         float devFactor = 0.01f;
         float deviation = (float)((-devFactor) + (2 * devFactor) * rand.NextDouble());
         BrakeResult result = BallBrakeSolver.GetBrakePosition(0.5f, sliderValue, directionFactor, sliderSpeed, decayRate, 0);
-        Debug.Log($"减速点: {result.breakPos}, 方向: {result.direction}");
+        //Debug.Log($"减速点: {result.breakPos}, 方向: {result.direction}");
         aiBreakPos = deviation+0.5f +result.breakPos;
         aiBreakDirection = result.direction;
         isAIAttacking = true;

@@ -140,7 +140,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &266806193
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1914,7 +1914,7 @@ MonoBehaviour:
   actionButton: {fileID: 6546792729158969591, guid: 2ded60afe5c10d740aac5b393ea9ee6e, type: 3}
   actualAttackDamage: 0
   uiManager: {fileID: 472916896}
-  playerAnimator: {fileID: 0}
+  roleAnimator: {fileID: 0}
   animationEvent: {fileID: 0}
 --- !u!114 &1225584376
 MonoBehaviour:

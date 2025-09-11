@@ -18,6 +18,7 @@ public class RoleManager : MonoBehaviour
     public RoleInfoPanel enemyInfoPanel;
 
     public event System.Action OnBattleWon;
+    public event System.Action OnBattleLost;
 
 
     public GameObject CreatePlayer()
@@ -52,6 +53,15 @@ public class RoleManager : MonoBehaviour
         if(enemyRole.roleHPCurrent<=0)
         {
             OnBattleWon?.Invoke();
+        }
+    }
+    public void PlayerTakeDamage(float damage)
+    {
+        playerRole.roleHPCurrent -= damage;
+        playerInfoPanel.RoleInfoUpdate(playerRole.roleHPCurrent);
+        if (playerRole.roleHPCurrent <= 0)
+        {
+            OnBattleLost?.Invoke();
         }
     }
 }

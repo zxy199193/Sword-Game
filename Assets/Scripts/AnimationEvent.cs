@@ -9,6 +9,5 @@ public class AnimationEvent : MonoBehaviour
     public void EndActionAni()
     {
         OnAnimationEnd?.Invoke();
-        Debug.Log("Event Sent");
     }
 }
