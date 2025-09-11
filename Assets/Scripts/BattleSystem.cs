@@ -76,6 +76,10 @@ public class BattleSystem : MonoBehaviour
             battleState = BattleState.ENEMYTURN;
             StartCoroutine(uiManager.EnemyTurnUI());
         }
+        attackPopUpPanel.SetActive(true);
+        attackPopUp.currentActionEnum = ActionEnum.Attack_02;
+        attackPopUp.UseAction();
+        attackPopUp.OnAttackDamage += ExecuteAttack;
     }
 
     public IEnumerator EnemyAction()

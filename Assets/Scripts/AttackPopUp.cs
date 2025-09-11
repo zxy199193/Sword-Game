@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.PlayerSettings;
+using static UnityEngine.GraphicsBuffer;
 
 public class AttackPopUp : MonoBehaviour
 {
@@ -16,6 +18,7 @@ public class AttackPopUp : MonoBehaviour
     public ActionData currentActionData;
     public event System.Action<float,int> OnAttackDamage;
     public int attackAni;
+    public bool isAIAttacking = false;
 
     private bool isAiming = true;
     private bool isSlowDown = false;
@@ -50,6 +53,10 @@ public class AttackPopUp : MonoBehaviour
     public GameObject hitSection_Lv4;
     public GameObject hitSection_Lv5;
 
+    public float aiBreakPos = 0f;
+    public float aiBreakDirection = 0f;
+    private static readonly System.Random rand = new System.Random();
+
     private void Update()
     {
         UpdateUI();
@@ -62,6 +69,16 @@ public class AttackPopUp : MonoBehaviour
                 GetHitFactor(sliderValue);
                 StartCoroutine(DealActualDamage());
                 isSlowDown = false;
+            }
+        }
+        if (isAIAttacking)
+        {
+            Debug.Log("AI about to Slash."+"  Slider: "+sliderValue+" /Direction: "+directionFactor);
+            if (sliderValue >= aiBreakPos - 0.005 && sliderValue <= aiBreakPos+0.005 && directionFactor == aiBreakDirection)
+            {
+                Debug.Log("AI Slashed!");
+                OnSlashButton();
+                isAIAttacking = false;
             }
         }
     }
@@ -188,6 +205,18 @@ public class AttackPopUp : MonoBehaviour
         }
         Debug.Log("Hit Level =" + hitLevel + "/" + "Attack Factor = " + attackFactor);
     }
+
+    public void OnAIButton()
+    {
+        float devFactor = 0.01f;
+        float deviation = (float)((-devFactor) + (2 * devFactor) * rand.NextDouble());
+        BrakeResult result = BallBrakeSolver.GetBrakePosition(0.5f, sliderValue, directionFactor, sliderSpeed, decayRate, 0);
+        Debug.Log($"减速点: {result.breakPos}, 方向: {result.direction}");
+        aiBreakPos = deviation+0.5f +result.breakPos;
+        aiBreakDirection = result.direction;
+        isAIAttacking = true;
+    }
+
 
 
 
