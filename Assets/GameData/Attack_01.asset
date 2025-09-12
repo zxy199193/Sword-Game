@@ -25,7 +25,7 @@ MonoBehaviour:
   attackHitSection_Lv3: 10
   attackHitSection_Lv4: 0
   attackHitSection_Lv5: 0
-  attackAni: 1
   defendValue: -1
   dodgeRate: -1
   itemValue: -1
+  actionAni: 1

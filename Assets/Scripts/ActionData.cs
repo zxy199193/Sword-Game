@@ -37,10 +37,10 @@ public class ActionData : ScriptableObject
     public int attackHitSection_Lv3;
     public int attackHitSection_Lv4;
     public int attackHitSection_Lv5;
-    public int attackAni;
     
     public int defendValue;
     public int dodgeRate;
     public int itemValue;
 
+    public int actionAni;
 }

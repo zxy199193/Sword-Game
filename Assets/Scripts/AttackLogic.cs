@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using static UnityEditor.PlayerSettings;
 using static UnityEngine.GraphicsBuffer;
 
-public class AttackPopUp : MonoBehaviour
+public class AttackLogic : MonoBehaviour
 {
     public float attackValue;
     public float actualDamage;
@@ -17,9 +17,10 @@ public class AttackPopUp : MonoBehaviour
     public ActionSelection actionSelection;
     public ActionData currentActionData;
     public event System.Action<float,int> OnAttackDamage;
-    public int attackAni;
+    public int actionAni;
     public bool isAIAttacking = false;
     public GameObject attackButton;
+    public GameObject popupPanel;
 
     private bool isAiming = true;
     private bool isSlowDown = false;
@@ -101,7 +102,7 @@ public class AttackPopUp : MonoBehaviour
         hitSectio_Lv3 = currentActionData.attackHitSection_Lv3;
         hitSectio_Lv4 = currentActionData.attackHitSection_Lv4;
         hitSectio_Lv5 = currentActionData.attackHitSection_Lv5;
-        attackAni = currentActionData.attackAni;
+        actionAni = currentActionData.actionAni;
         Initialize();
     }
     
@@ -161,13 +162,10 @@ public class AttackPopUp : MonoBehaviour
     IEnumerator DealActualDamage()
     {
         actualDamage = attackValue * attackFactor;
-        Debug.Log("Attack Dmg: "+attackValue);
-        Debug.Log("Attack Factor: "+attackFactor);
-        Debug.Log("Slider Value: " + sliderValue);
-        Debug.Log("Actual Dmg: " + actualDamage);
+        Debug.Log("Attack Dmg: "+attackValue+ "  /Attack Factor: " + attackFactor+ "  /Slider Value: " + sliderValue+ "  /Actual Dmg: " + actualDamage);
         yield return new WaitForSeconds(1.5f);
-        OnAttackDamage?.Invoke(actualDamage,attackAni);
-        gameObject.SetActive(false);
+        OnAttackDamage?.Invoke(actualDamage,actionAni);
+        popupPanel.SetActive(false);
         attackButton.SetActive(true);
         yield return null;
     }
@@ -218,8 +216,4 @@ public class AttackPopUp : MonoBehaviour
         aiBreakDirection = result.direction;
         isAIAttacking = true;
     }
-
-
-
-
 }

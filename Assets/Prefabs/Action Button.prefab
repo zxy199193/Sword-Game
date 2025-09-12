@@ -55,9 +55,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionEnum: 0
-  actionName: {fileID: 6462762801524335614}
-  actionType: {fileID: 5994528175784242423}
-  actionDes: {fileID: 6438688800770040992}
+  actionType: 0
+  actionNameText: {fileID: 6462762801524335614}
+  actionTypeText: {fileID: 5994528175784242423}
+  actionDesText: {fileID: 6438688800770040992}
   actionIcon: {fileID: 5030924702413972844}
   actionValue_01: 0
   actionValue_02: 0

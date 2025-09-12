@@ -53,11 +53,12 @@ public class ActionSelection : MonoBehaviour
             GameObject actionButton = Instantiate(actionButtonPrefab, actionButtionArea);
             ActionButton buttonInfo = actionButton.GetComponent<ActionButton>();
             buttonInfo.actionEnum = action.actionEnum;
-            buttonInfo.actionName.text = action.actionName;
-            buttonInfo.actionType.text = action.actionType.ToString();
-            buttonInfo.actionDes.text = action.actionDes;
+            buttonInfo.actionType = action.actionType;
+            buttonInfo.actionNameText.text = action.actionName;
+            buttonInfo.actionTypeText.text = action.actionType.ToString();
+            buttonInfo.actionDesText.text = action.actionDes;
             buttonInfo.actionIcon.sprite = action.actionIcon;
-            buttonInfo.OnUseAction += battleSystem.ReceiveActionEnum;
+            buttonInfo.OnUseAction += battleSystem.ReceiveActionButton;
         }
     }
 

@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roleEnum: 2
   roleName: Enemy_01
-  roleHP: 800
+  roleHP: 500

@@ -10,9 +10,10 @@ public class UIManager : MonoBehaviour
     public float actualAttackDamage;
     public GameObject battleInfo;
     public GameObject actionButtonPanel;
+    public GameObject actionList;
 
     public event System.Action OnUIEnd;
-    public IEnumerator BattleInfo()
+    public IEnumerator BattleInfoAttack()
     {
         yield return new WaitForSeconds(0.5f);
         if (actualAttackDamage == 0)
@@ -31,6 +32,13 @@ public class UIManager : MonoBehaviour
         OnUIEnd?.Invoke();
         yield return null;
     }
+    public IEnumerator BattleInfoDefend()
+    {
+        battleInfo.SetActive(true);
+        battleInfoText.text = "Defend!";
+        yield return new WaitForSeconds(1f);
+        battleInfo.SetActive(false);
+    }
 
     public IEnumerator PlayerTurnUI()
     {
@@ -38,6 +46,7 @@ public class UIManager : MonoBehaviour
         battleInfo.SetActive(true);
         yield return new WaitForSeconds(1f);
         actionButtonPanel.SetActive(true);
+        actionList.SetActive(true);
         battleInfo.SetActive(false);
         yield return null;
     }
@@ -46,6 +55,7 @@ public class UIManager : MonoBehaviour
         battleInfoText.text = "Enemy Turn!";
         battleInfo.SetActive(true);
         actionButtonPanel.SetActive(false);
+        actionList.SetActive(false);
         yield return new WaitForSeconds(1f);
         battleInfo.SetActive(false);
         yield return null;

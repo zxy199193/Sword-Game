@@ -205,9 +205,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1250485489}
+      - m_Target: {fileID: 1225584371}
         m_TargetAssemblyTypeName: AttackPopUp, Assembly-CSharp
-        m_MethodName: OnAIButton
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -654,6 +654,7 @@ MonoBehaviour:
   actualAttackDamage: 0
   battleInfo: {fileID: 1101525839}
   actionButtonPanel: {fileID: 801040107}
+  actionList: {fileID: 1874282433}
 --- !u!4 &472916897
 Transform:
   m_ObjectHideFlags: 0
@@ -1463,8 +1464,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1250485489}
-        m_TargetAssemblyTypeName: AttackPopUp, Assembly-CSharp
+      - m_Target: {fileID: 1225584378}
+        m_TargetAssemblyTypeName: AttackLogic, Assembly-CSharp
         m_MethodName: OnSlashButton
         m_Mode: 1
         m_Arguments:
@@ -1844,6 +1845,8 @@ GameObject:
   - component: {fileID: 1225584374}
   - component: {fileID: 1225584372}
   - component: {fileID: 1225584376}
+  - component: {fileID: 1225584378}
+  - component: {fileID: 1225584377}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1904,16 +1907,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   battleState: 0
+  tempState: 0
   roleManager: {fileID: 1225584376}
   playerObject: {fileID: 0}
   enemyObject: {fileID: 0}
   playerRole: {fileID: 0}
   enemyRole: {fileID: 0}
   attackPopUpPanel: {fileID: 1250485487}
-  attackPopUp: {fileID: 1250485489}
+  attackLogic: {fileID: 1225584378}
   actionButton: {fileID: 6546792729158969591, guid: 2ded60afe5c10d740aac5b393ea9ee6e, type: 3}
   actualAttackDamage: 0
   uiManager: {fileID: 472916896}
+  defendLogic: {fileID: 1225584377}
+  defendValue: 0
   roleAnimator: {fileID: 0}
   animationEvent: {fileID: 0}
 --- !u!114 &1225584376
@@ -1937,8 +1943,77 @@ MonoBehaviour:
   enemyPos: {fileID: 2064038703}
   playerRoleData: {fileID: 11400000, guid: bfc09ffa9f49d2a49b909194ecc4aab4, type: 2}
   enemyRoleData: {fileID: 11400000, guid: 7324586f2358aea48b2b41292b3f5e56, type: 2}
+  playerDefend: 0
+  enemyDefend: 0
   playerInfoPanel: {fileID: 7214967392143201922}
   enemyInfoPanel: {fileID: 457394121}
+--- !u!114 &1225584377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1225584371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd6784825fd17604eb9bc45f430022cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defendValue: 0
+  currentActionEnum: 0
+  actionAni: 0
+  actionSelection: {fileID: 1225584372}
+  currentActionData: {fileID: 0}
+--- !u!114 &1225584378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1225584371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ad303d9a3f657041aef15cebdcfc91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackValue: 0
+  actualDamage: 0
+  attackFactor: 2
+  currentActionEnum: 0
+  actionName: {fileID: 989204468}
+  actionDamage: {fileID: 1580635452}
+  actionSelection: {fileID: 1225584372}
+  currentActionData: {fileID: 0}
+  actionAni: 0
+  isAIAttacking: 0
+  attackButton: {fileID: 1018618443}
+  popupPanel: {fileID: 1250485487}
+  sliderValue: 0
+  sliderSpeed: 0
+  lastSliderValue: 0
+  directionFactor: 1
+  slider: {fileID: 962881498}
+  sliderValueText: {fileID: 1580635452}
+  hitLevel: 0
+  hitSectio_Lv0: 50
+  hitSectio_Lv1: 30
+  hitSectio_Lv2: 20
+  hitSectio_Lv3: 10
+  hitSectio_Lv4: 0
+  hitSectio_Lv5: 0
+  hitFactor_Lv0: 0
+  hitFactor_Lv1: 1
+  hitFactor_Lv2: 1.35
+  hitFactor_Lv3: 2
+  hitFactor_Lv4: 3
+  hitFactor_Lv5: 5
+  hitSection_Lv1: {fileID: 1193758454}
+  hitSection_Lv2: {fileID: 1439104875}
+  hitSection_Lv3: {fileID: 1205913149}
+  hitSection_Lv4: {fileID: 1888548690}
+  hitSection_Lv5: {fileID: 1214830786}
+  aiBreakPos: 0
+  aiBreakDirection: 0
 --- !u!1 &1250485487
 GameObject:
   m_ObjectHideFlags: 0
@@ -1948,7 +2023,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1250485488}
-  - component: {fileID: 1250485489}
   m_Layer: 5
   m_Name: PopUp
   m_TagString: Untagged
@@ -1981,54 +2055,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 600, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1250485489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1250485487}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ad303d9a3f657041aef15cebdcfc91b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackValue: 0
-  actualDamage: 0
-  attackFactor: 2
-  currentActionEnum: 0
-  actionName: {fileID: 989204468}
-  actionDamage: {fileID: 1580635452}
-  actionSelection: {fileID: 1225584372}
-  currentActionData: {fileID: 0}
-  attackAni: 0
-  isAIAttacking: 0
-  sliderValue: 0
-  sliderSpeed: 0
-  lastSliderValue: 0
-  directionFactor: 1
-  slider: {fileID: 962881498}
-  sliderValueText: {fileID: 1580635452}
-  hitLevel: 0
-  hitSectio_Lv0: 50
-  hitSectio_Lv1: 30
-  hitSectio_Lv2: 20
-  hitSectio_Lv3: 10
-  hitSectio_Lv4: 0
-  hitSectio_Lv5: 0
-  hitFactor_Lv0: 0
-  hitFactor_Lv1: 1
-  hitFactor_Lv2: 1.35
-  hitFactor_Lv3: 2
-  hitFactor_Lv4: 3
-  hitFactor_Lv5: 5
-  hitSection_Lv1: {fileID: 1193758454}
-  hitSection_Lv2: {fileID: 1439104875}
-  hitSection_Lv3: {fileID: 1205913149}
-  hitSection_Lv4: {fileID: 1888548690}
-  hitSection_Lv5: {fileID: 1214830786}
-  aiBreakPos: 0
-  aiBreakDirection: 0
 --- !u!1 &1270237583
 GameObject:
   m_ObjectHideFlags: 0

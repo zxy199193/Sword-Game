@@ -13,7 +13,10 @@ public class RoleManager : MonoBehaviour
     public Transform enemyPos;
     public RoleData playerRoleData;
     public RoleData enemyRoleData;
-    
+
+    public float playerDefend = 0;
+    public float enemyDefend = 0;
+
     public RoleInfoPanel playerInfoPanel;
     public RoleInfoPanel enemyInfoPanel;
 
@@ -48,20 +51,41 @@ public class RoleManager : MonoBehaviour
 
     public void EnemyTakeDamage(float damage)
     {
-        enemyRole.roleHPCurrent -= damage;
-        enemyInfoPanel.RoleInfoUpdate(enemyRole.roleHPCurrent);
-        if(enemyRole.roleHPCurrent<=0)
+        if (damage > enemyDefend)
         {
+            enemyRole.roleHPCurrent -= damage - enemyDefend;
+        }
+        else { enemyRole.roleHPCurrent -= 0; }
+        if (enemyRole.roleHPCurrent <= 0)
+        {
+            enemyRole.roleHPCurrent = 0;
             OnBattleWon?.Invoke();
         }
+        enemyInfoPanel.RoleInfoUpdate(enemyRole.roleHPCurrent);
+        enemyDefend = 0;
     }
     public void PlayerTakeDamage(float damage)
     {
-        playerRole.roleHPCurrent -= damage;
-        playerInfoPanel.RoleInfoUpdate(playerRole.roleHPCurrent);
+        if (damage > playerDefend)
+        {
+           playerRole.roleHPCurrent -= damage - playerDefend;
+        }
+        else { playerRole.roleHPCurrent -= 0; }
+
         if (playerRole.roleHPCurrent <= 0)
         {
+            playerRole.roleHPCurrent = 0;
             OnBattleLost?.Invoke();
         }
+        playerInfoPanel.RoleInfoUpdate(playerRole.roleHPCurrent);
+        playerDefend = 0;
+    }
+    public void PlayerDefend(float defendValue)
+    {
+        playerDefend = defendValue;
+    }
+    public void EnemyDefend(float defendValue)
+    {
+        enemyDefend = defendValue;
     }
 }
