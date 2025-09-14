@@ -40,8 +40,8 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: DefendAction
-    m_EventTreshold: 1
+    m_ConditionEvent: ActionAniNum
+    m_EventTreshold: 201
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 2651076938338814048}
   m_Solo: 0
@@ -65,8 +65,8 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: AttackAction
-    m_EventTreshold: 2
+    m_ConditionEvent: ActionAniNum
+    m_EventTreshold: 102
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -2894728039167135639}
   m_Solo: 0
@@ -90,8 +90,8 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: AttackAction
-    m_EventTreshold: 1
+    m_ConditionEvent: ActionAniNum
+    m_EventTreshold: 101
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -390374525320370783}
   m_Solo: 0
@@ -115,7 +115,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: DefendAction
+    m_ConditionEvent: ActionAniNum
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 937930133620002031}
@@ -191,16 +191,10 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Player
+  m_Name: RoleActionController
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: AttackAction
-    m_Type: 3
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: DefendAction
+  - m_Name: ActionAniNum
     m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -228,7 +222,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: AttackAction
+    m_ConditionEvent: ActionAniNum
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 937930133620002031}
@@ -309,7 +303,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 6
-    m_ConditionEvent: AttackAction
+    m_ConditionEvent: ActionAniNum
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 937930133620002031}

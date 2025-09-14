@@ -23,8 +23,10 @@ public class BattleSystem : MonoBehaviour
     public DefendLogic defendLogic;
     public float defendValue;
 
-    public Animator roleAnimator;//需要分开
-    public AnimationEvent animationEvent;
+    public Animator playerAnimator;
+    public Animator enemyAnimator;
+    public AnimationEvent playerAnimationEvent;
+    public AnimationEvent enemyAnimationEvent;
 
 
     void Start()
@@ -36,8 +38,12 @@ public class BattleSystem : MonoBehaviour
         defendLogic.OnDefend -= ExecuteDefend;
         playerObject = roleManager.CreatePlayer();
         playerRole = playerObject.GetComponent<Role>();
+        playerAnimationEvent = playerObject.GetComponentInChildren<AnimationEvent>();
+        playerAnimator = playerObject.GetComponentInChildren<Animator>();
         enemyObject = roleManager.CreateEnemy();
         enemyRole = playerObject.GetComponent<Role>();
+        enemyAnimationEvent = enemyObject.GetComponentInChildren<AnimationEvent>();
+        enemyAnimator = enemyObject.GetComponentInChildren<Animator>();
         StartPlayerTurn();
     }
     public void StartPlayerTurn()
@@ -46,6 +52,7 @@ public class BattleSystem : MonoBehaviour
         uiManager.OnUIEnd -= StartPlayerTurn;
         attackLogic.OnAttackDamage -= ExecuteAttack;
         uiManager.OnUIEnd -= CheckGameState;
+        playerAnimator.SetInteger("ActionAniNum", 0);
         StartCoroutine(uiManager.PlayerTurnUI());
     }
 
@@ -76,18 +83,14 @@ public class BattleSystem : MonoBehaviour
         switch (battleState)
         {
             case BattleState.PLAYERTURN:
-                animationEvent = playerObject.GetComponentInChildren<AnimationEvent>();
-                roleAnimator = playerObject.GetComponentInChildren<Animator>();
-                animationEvent.OnAnimationEnd += ReceiveAnimationEvent;
-                roleAnimator.SetInteger("AttackAction", ani);
+                playerAnimationEvent.OnAnimationEnd += ReceiveAnimationEvent;
+                playerAnimator.SetInteger("ActionAniNum", ani);
                 actualAttackDamage = actualDamage;
                 roleManager.EnemyTakeDamage(actualAttackDamage);
                 break;
             case BattleState.ENEMYTURN:
-                animationEvent = enemyObject.GetComponentInChildren<AnimationEvent>();
-                roleAnimator = enemyObject.GetComponentInChildren<Animator>();
-                animationEvent.OnAnimationEnd += ReceiveAnimationEvent;
-                roleAnimator.SetInteger("AttackAction", ani);
+                enemyAnimationEvent.OnAnimationEnd += ReceiveAnimationEvent;
+                enemyAnimator.SetInteger("ActionAniNum", ani);
                 actualAttackDamage = actualDamage;
                 roleManager.PlayerTakeDamage(actualAttackDamage);
                 break;
@@ -100,17 +103,17 @@ public class BattleSystem : MonoBehaviour
         switch (battleState)
         {
             case BattleState.PLAYERTURN:
-                roleAnimator.SetInteger("AttackAction", 0);
+                playerAnimator.SetInteger("ActionAniNum", 0);
                 uiManager.actualAttackDamage = actualAttackDamage;
                 StartCoroutine(uiManager.BattleInfoAttack());
-                animationEvent.OnAnimationEnd -= ReceiveAnimationEvent;
+                playerAnimationEvent.OnAnimationEnd -= ReceiveAnimationEvent;
                 uiManager.OnUIEnd += CheckGameState;
                 break;
             case BattleState.ENEMYTURN:
-                roleAnimator.SetInteger("AttackAction", 0);
+                enemyAnimator.SetInteger("ActionAniNum", 0);
                 uiManager.actualAttackDamage = actualAttackDamage;
                 StartCoroutine(uiManager.BattleInfoAttack());
-                animationEvent.OnAnimationEnd -= ReceiveAnimationEvent;
+                enemyAnimationEvent.OnAnimationEnd -= ReceiveAnimationEvent;
                 uiManager.OnUIEnd += CheckGameState;
                 break;
         }
@@ -120,16 +123,14 @@ public class BattleSystem : MonoBehaviour
         switch (battleState)
         {
             case BattleState.PLAYERTURN:
-                roleAnimator = playerObject.GetComponentInChildren<Animator>();
-                roleAnimator.SetInteger("DefendAction", ani);
+                playerAnimator.SetInteger("ActionAniNum", ani);
                 defendValue = getDefendValue;
                 roleManager.PlayerDefend(defendValue);
                 StartCoroutine(uiManager.BattleInfoDefend());
                 StartEnemyTurn();
                 break;
             case BattleState.ENEMYTURN:
-                roleAnimator = enemyObject.GetComponentInChildren<Animator>();
-                roleAnimator.SetInteger("DefendAction", ani);
+                enemyAnimator.SetInteger("ActionAniNum", ani);
                 defendValue = getDefendValue;
                 roleManager.EnemyDefend(defendValue);
                 StartCoroutine(uiManager.BattleInfoDefend());
@@ -144,7 +145,7 @@ public class BattleSystem : MonoBehaviour
         attackLogic.OnAttackDamage -= ExecuteAttack;
         uiManager.OnUIEnd -= CheckGameState;
         defendLogic.OnDefend -= ExecuteDefend;
-        roleAnimator.SetInteger("DefendAction", 0);
+        enemyAnimator.SetInteger("ActionAniNum", 0);
         if (battleState != BattleState.WON)
         {
             battleState = BattleState.ENEMYTURN;

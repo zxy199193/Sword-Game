@@ -28,4 +28,4 @@ MonoBehaviour:
   defendValue: 10
   dodgeRate: -1
   itemValue: -1
-  actionAni: 1
+  actionAni: 201
